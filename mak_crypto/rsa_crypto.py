@@ -105,9 +105,10 @@ def encrypt(public_key: rsa.RSAPublicKey, msg_b: bytes) -> bytes:
     Шифрует байты msg_b, используя RSA алгоритм и открытый ключ.
     Максимальный размер сообщения -- 190 байт.
     '''
-    if len(msg_b) > 190:
+    if len(msg_b) > MAX_SINGLE_MSG_SIZE[public_key.key_size]:
         raise ValueError(
-            f'len(msg_b) = {len(msg_b)}. Длина обязана не превышать 190.'
+            f'len(msg_b) = {len(msg_b)}. Длина обязана не превышать '
+            f'{MAX_SINGLE_MSG_SIZE[public_key.key_size]}.'
         )
     ciphertext = public_key.encrypt(
         msg_b,
@@ -136,15 +137,15 @@ def decrypt(private_key: rsa.RSAPrivateKey, enc_b: bytes) -> bytes:
     return plaintext
 
 
-def split_bytes(bstr: bytes, chunk_size=190):
+def split_bytes(bstr: bytes, chunk_size=190) -> List[bytes]:
     '''
     Разбивает байты на чанки размера chunk_size.
     Последний чанк может быть меньше других.
     Функция нужна для того, чтобы можно было шифровать
      сообщения любой длины.
     '''
-    return [bytes[i: i + chunk_size]
-            for i in range(0, len(bytes), chunk_size)]
+    return [bstr[i: i + chunk_size]
+            for i in range(0, len(bstr), chunk_size)]
 
 
 def encrypt_long(public_key: rsa.RSAPublicKey, msg_b: bytes) -> bytes:
@@ -171,15 +172,10 @@ def decrypt_long(private_key: rsa.RSAPrivateKey, enc_b: bytes) -> bytes:
     return b''.join(dec_chunks)
 
 
-def max_len(n_bits=2048):
+def max_len(n_bits=2048) -> int:
     '''
     Максимальный размер сообщения, которое можно зашифровать за раз
     '''
     if n_bits not in VALID_KEY_SIZES:
         raise ValueError(f'Key must be in {VALID_KEY_SIZES}')
     return n_bits//8 - SHA_SIZE//4 - 2
-
-
-if __name__ == '__main__':
-    pr_k = create_private_key(3072)
-    pu_k = pr_k.public_key()

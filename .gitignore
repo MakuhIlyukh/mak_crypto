@@ -1,0 +1,7 @@
+*.pem
+hamlet_dec.txt
+hamlet_enc.txt
+hamlet.txt
+dec.txt
+enc.txt
+mak_crypto/__pycache__/
