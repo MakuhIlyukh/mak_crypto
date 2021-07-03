@@ -41,4 +41,3 @@ if __name__ == '__main__':
     enc_b = encrypt_long(public_key, msg_b)
     with open(enc_filename, 'wb') as f:
         f.write(enc_b)
-    

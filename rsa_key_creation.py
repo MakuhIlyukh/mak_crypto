@@ -41,10 +41,11 @@ if __name__ == '__main__':
     print()
 
     # Пароль для закрытого ключа
-    print('Введите пароль для шифрования закрытого ключа. '
-          'Если пароль не нужен, оставьте поле ввода пустым. '
-          'Используйте только латинские буквы и цифры(ASCII): ',
-          end=''
+    print(
+        'Введите пароль для шифрования закрытого ключа. '
+        'Если пароль не нужен, оставьте поле ввода пустым. '
+        'Используйте только латинские буквы и цифры(ASCII): ',
+        end=''
     )
     password_str = input()
     print()
@@ -52,8 +53,8 @@ if __name__ == '__main__':
         password_b = password_str.encode('utf-8')
     else:
         password_b = None
-    
-    # Создание ключей и сохранение их 
+
+    # Создание ключей и сохранение их
     private_key = create_private_key(n_bits=n_bits)
     public_key = private_key.public_key()
     save_private_key(private_key_prefix + '_private', private_key, password_b)
